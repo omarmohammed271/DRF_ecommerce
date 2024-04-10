@@ -6,3 +6,4 @@ from .models import Account
 class AccountAdmin(admin.ModelAdmin):
     list_display = 'first_name','last_name','username','email','date_joined','last_login'
     list_filter = 'username','email'
+    search_fields = 'username','email'
