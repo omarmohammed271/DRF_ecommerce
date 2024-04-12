@@ -1,9 +1,11 @@
 from django.shortcuts import render
-from .models import *
-from .serializers import CategorySerializer,ProductSerializer,ImageProductSerializer,OfferSerializer,ReviewSerializer,ColorSerializer,SizeSerializer
 from rest_framework import viewsets,status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
+from .models import *
+from .serializers import CategorySerializer,ProductSerializer,ImageProductSerializer,OfferSerializer,ReviewSerializer,ColorSerializer,SizeSerializer
+
 # Create your views here.
 
 class CategoryVIew(viewsets.ModelViewSet):
@@ -13,6 +15,8 @@ class CategoryVIew(viewsets.ModelViewSet):
 class ProductView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = [SearchFilter]
+    search_fields  = ['name','description','category__name']
 
     @action(detail=True,methods=['GET'])
     def slug_product(self,request,id=None,slug=None):
