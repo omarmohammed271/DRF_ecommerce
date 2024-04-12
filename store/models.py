@@ -75,7 +75,7 @@ def upload_image(instance,file_name:str):
 
 class ImageProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)    
-    image = models.ImageField(upload_to='products/')
+    image = models.ImageField(upload_to=upload_image)
 
     def __str__(self) -> str:
         return f'Images of **{self.product.name}**'
@@ -91,8 +91,10 @@ class Review(models.Model):
         if self.rating <1:
             raise ValidationError('Rating minmum is 1')
         return super(Review,self).clean()   
+    class Meta:
+        unique_together = (('user', 'product'),)
+        index_together = (('user', 'product'),) 
     
-
     def __str__(self) -> str:
         return f'Review Of {self.product}'
     
