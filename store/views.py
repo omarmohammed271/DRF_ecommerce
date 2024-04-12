@@ -25,6 +25,21 @@ class ProductView(viewsets.ModelViewSet):
                'message':'product not found'
            }
            return Response(message,status=status.HTTP_400_BAD_REQUEST) 
+    @action(detail=True,methods=['GET'])
+    def search_by_category(self,request,id=None):
+        try:
+            product = Product.objects.filter(category__id=id)
+            serializer = ProductSerializer(product,many=True)
+            json = {
+                'number of product' : f'{len(product)} Products',
+                'result'  : serializer.data
+            }  
+            return Response(json,status=status.HTTP_200_OK)
+        except:
+            json = {
+                'message' : 'Product Not Found'
+            }        
+            return Response(json,status=status.HTTP_200_OK)
     
 class ImageProductView(viewsets.ModelViewSet):
     queryset = ImageProduct.objects.all()
