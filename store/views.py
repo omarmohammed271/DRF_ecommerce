@@ -16,7 +16,7 @@ class ProductView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [SearchFilter]
-    search_fields  = ['name','description','category__name']
+    search_fields  = ['name','description','category__name','size__name','color__name']
 
     @action(detail=True,methods=['GET'])
     def slug_product(self,request,id=None,slug=None):

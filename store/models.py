@@ -78,7 +78,7 @@ def upload_image(instance,file_name:str):
     return f'products/{instance.product}.{extension}'
 
 class ImageProduct(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)    
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='images')    
     image = models.ImageField(upload_to=upload_image)
 
     def __str__(self) -> str:

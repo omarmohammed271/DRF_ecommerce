@@ -14,7 +14,7 @@ router.register('review',views.ReviewView)
 app_name='store'
 urlpatterns = [
     # path('',include(router.urls)),
-    path('product/slug_product/<str:id>/<str:slug>/', views.ProductView.as_view({'get': 'slug_product'}), name='slug_product'),
+    path('product/<str:id>/<str:slug>/', views.ProductView.as_view({'get': 'slug_product'}), name='slug_product'),
     path('product/search_by_category/<str:id>/', views.ProductView.as_view({'get': 'search_by_category'}), name='search_by_category'),
     
 ]

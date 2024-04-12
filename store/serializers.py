@@ -4,12 +4,17 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model=Category
         fields = '__all__'
-        
+class ImageProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ImageProduct
+        fields = '__all__'       
         
 class ProductSerializer(serializers.ModelSerializer):
+    images = ImageProductSerializer(many=True, read_only=True)
+
     class Meta:
         model=Product
-        fields = 'name','category','slug','price','size','color','description','stock','is_available','updated_at','number_of_rating','avg'
+        fields = 'name','images','category','slug','price','size','color','description','stock','is_available','updated_at','number_of_rating','avg'
         
 
         
@@ -24,15 +29,6 @@ class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model=Color
         fields = 'name',
-        
-
-        
-class ImageProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=ImageProduct
-        fields = 'product','image'
-        
-
         
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
