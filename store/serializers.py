@@ -9,41 +9,41 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model=Product
-        fields = '__all__'
-        exclude = 'id','user',
+        fields = 'name','category','slug','price','size','color','description','stock','is_available','updated_at','number_of_rating','avg'
+        
 
         
 class SizeSerializer(serializers.ModelSerializer):
     class Meta:
         model=Size
-        fields = '__all__'
-        exclude = 'id',
+        fields = 'name',
+    
 
         
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model=Color
-        fields = '__all__'
-        exclude = 'id',
+        fields = 'name',
+        
 
         
 class ImageProductSerializer(serializers.ModelSerializer):
     class Meta:
         model=ImageProduct
-        fields = '__all__'
-        exclude = 'id',
+        fields = 'product','image'
+        
 
         
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model=Review
-        fields = '__all__'
+        fields = 'user','product','rating','comment'
         
 
         
 class OfferSerializer(serializers.ModelSerializer):
     class Meta:
         model=Offer
-        fields = '__all__'
+        fields = 'product','discount_precentage','start_date','end_date','price_after'
 
         

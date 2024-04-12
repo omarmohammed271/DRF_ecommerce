@@ -1,6 +1,7 @@
 from typing import Any, Iterable
 import uuid
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from accounts.models import Account
 from django.core.validators import MinValueValidator,MaxValueValidator
@@ -67,6 +68,9 @@ class Product(models.Model):
         if len(rating) > 0:
             return stars/len(rating)    
         return 0
+    
+    def get_absolute_url(self):
+        return reverse("store:slug_product", args=[self.category.id,self.slug])
 
 
 def upload_image(instance,file_name:str):
