@@ -3,6 +3,8 @@ from rest_framework import viewsets,status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from .models import *
 from .serializers import CategorySerializer,ProductSerializer,ImageProductSerializer,OfferSerializer,ReviewSerializer,ColorSerializer,SizeSerializer
 
@@ -13,11 +15,43 @@ class CategoryVIew(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
 
 class ProductView(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [SearchFilter]
     search_fields  = ['name','description','category__name','size__name','color__name']
 
+    @action(detail=True, methods=['POST'])    
+    def rate_product(self,request,slug=None):
+            # my code
+        if 'rating' in request.data:
+            product  = Product.objects.get(slug=slug)
+            user = request.user
+            stars = request.data['rating']
+            comment = request.data['comment']
+            try:
+                rating = Review.objects.get(product=product,user=user)
+                rating.rating = stars
+                rating.comment = comment
+                rating.save()
+                serializer = ReviewSerializer(rating)
+                response={
+                    'message':'Rating Updated ',
+                    'result' : serializer.data,
+                }
+                return Response(response,status=status.HTTP_200_OK)
+            except:
+                rating = Review.objects.create(user=user,product=product,
+                                               rating=stars,comment=comment)
+                serializer = ReviewSerializer(rating)
+                response={
+                    'message':'Rating Created ',
+                    'result' : serializer.data,
+                }
+                return Response(response,status=status.HTTP_200_OK)
+        
+       
     @action(detail=True,methods=['GET'])
     def slug_product(self,request,id=None,slug=None):
         try:
@@ -45,6 +79,7 @@ class ProductView(viewsets.ModelViewSet):
             }        
             return Response(json,status=status.HTTP_200_OK)
     
+    
 class ImageProductView(viewsets.ModelViewSet):
     queryset = ImageProduct.objects.all()
     serializer_class = ImageProductSerializer
@@ -64,4 +99,4 @@ class ReviewView(viewsets.ModelViewSet):
 class OfferView(viewsets.ModelViewSet):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
-
+   

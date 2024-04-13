@@ -117,4 +117,5 @@ class Offer(models.Model):
     def __str__(self) -> str:
         return f'Offer of {self.product.name}'
     
+    
 
