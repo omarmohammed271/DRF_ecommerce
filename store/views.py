@@ -96,6 +96,28 @@ class ReviewView(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
+    def create(self, request, *args, **kwargs):
+        response = {
+            'message':'Create Review Not allowed from here'
+        }
+        return Response(response,status=status.HTTP_204_NO_CONTENT)
+    def update(self, request, *args, **kwargs):
+        response = {
+            'message':'Update Review Not allowed from here'
+        }
+        return Response(response,status=status.HTTP_204_NO_CONTENT)
+    def retrieve(self, request, *args, **kwargs):
+        response = {
+            'message':'Retrieve Review Not allowed from here'
+        }
+        return Response(response,status=status.HTTP_204_NO_CONTENT)
+    def destroy(self, request, *args, **kwargs):
+        response = {
+            'message':'Create Review Not allowed from here'
+        }
+        return Response(response,status=status.HTTP_204_NO_CONTENT)
+    
+
 class OfferView(viewsets.ModelViewSet):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer

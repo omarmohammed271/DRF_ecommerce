@@ -26,4 +26,13 @@ store
         -product
         -discount_precentage
         -start_date    
-        -end_date    
+        -end_date   
+
+-make url for rate_product from product viewset [Done]
+-will stop add or update or delete review from review serializer [Done]
+- cart function
+
+
+
+
+
