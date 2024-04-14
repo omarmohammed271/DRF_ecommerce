@@ -17,6 +17,7 @@ urlpatterns = [
     path('category/product/<str:id>/<str:slug>/', views.ProductView.as_view({'get': 'slug_product'}), name='slug_product'),
     path('categort/product/search_by_category/<str:id>/', views.ProductView.as_view({'get': 'search_by_category'}), name='search_by_category'),
     path('product/rate_product/<str:slug>/', views.ProductView.as_view({'post': 'rate_product'}), name='rate_product'),
+    path('product/add_to_cart/<str:slug>/', views.ProductView.as_view({'post': 'add_to_cart'}), name='add_to_cart'),
     
 ]
 urlpatterns += router.urls

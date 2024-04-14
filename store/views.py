@@ -5,6 +5,8 @@ from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from cart.models import CartItem
+from cart.serializers import CartItemSerializer
 from .models import *
 from .serializers import CategorySerializer,ProductSerializer,ImageProductSerializer,OfferSerializer,ReviewSerializer,ColorSerializer,SizeSerializer
 
@@ -50,8 +52,29 @@ class ProductView(viewsets.ModelViewSet):
                     'result' : serializer.data,
                 }
                 return Response(response,status=status.HTTP_200_OK)
-        
-       
+    @action(detail=True,methods=['POST'])
+    def add_to_cart(self,request,slug=None):
+        product = Product.objects.get(slug=slug)
+        quantity = int(request.data['quantity'])
+        user = request.user
+        try:
+            cart_item = CartItem.objects.get(user=user,product=product)
+            cart_item.quantity += quantity
+            cart_item.save()
+            serializer = CartItemSerializer(cart_item)
+            response = {
+                'message':'Product Updated to Cart',
+                'result' : serializer.data,
+            }
+            return Response(response,status=status.HTTP_200_OK)
+        except:
+            cart_item = CartItem.objects.create(user=user,product=product,quantity=quantity)    
+            serializer = CartItemSerializer(cart_item)
+            response = {
+                'message':'Product Added to Cart ',
+                'result' : serializer.data,
+            }
+            return Response(response,status=status.HTTP_200_OK)
     @action(detail=True,methods=['GET'])
     def slug_product(self,request,id=None,slug=None):
         try:
