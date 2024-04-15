@@ -9,6 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/store/',include('store.urls',namespace='store')),
     path('api/cart/',include('cart.urls',namespace='cart')),
+    path('api/order/',include('order.urls',namespace='order')),
     path('tokenrequest/',obtain_auth_token)
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
