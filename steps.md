@@ -30,7 +30,9 @@ store
 
 -make url for rate_product from product viewset [Done]
 -will stop add or update or delete review from review serializer [Done]
-- cart function
+- cart Models , serializers and viewsets
+-(from product detail)add to cart ---> api/store/product/add_to_cart [Done]
+-will add total price in cart [Done]
 
 
 

@@ -15,5 +15,12 @@ class CartItem(models.Model):
     
     def sub_total(self):
         return self.product.price * self.quantity
+    @property
+    def total(self):
+        total = 0
+        items = CartItem.objects.filter(user=self.user)
+        for item in items:
+            total += item.sub_total()
+        return total
     
     
