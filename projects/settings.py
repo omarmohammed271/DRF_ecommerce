@@ -74,7 +74,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'projects.wsgi.application'
 AUTH_USER_MODEL = 'accounts.Account'
-
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 

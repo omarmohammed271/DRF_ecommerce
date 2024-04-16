@@ -7,6 +7,7 @@ from store.models import Product
 class Order(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=254,blank=True,null=True)
     f_name = models.CharField(max_length=150)
     l_name = models.CharField(max_length=150)
     phone = models.CharField( max_length=15)
@@ -17,7 +18,7 @@ class Order(models.Model):
     @property
     def full_name(self):
         return f'{self.f_name} {self.l_name}'
-    
+    @property
     def full_address(self):
         return f'{self.address1} {self.address2}'
     
@@ -31,6 +32,7 @@ class OrderProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     product_price = models.FloatField()
+    order_notes = models.CharField(max_length=350)
     ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -45,5 +47,9 @@ class OrderProduct(models.Model):
         for item in items:
             total += item.sub_total
         return total
+
+    def __str__(self) -> str:
+        return f'{self.order.full_name} {self.product}'
+
 
 

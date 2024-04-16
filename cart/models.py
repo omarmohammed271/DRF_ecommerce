@@ -8,6 +8,8 @@ class CartItem(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE,null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+    size = models.CharField(max_length=150,blank=True,null=True)
+    color = models.CharField(max_length=150,blank=True,null=True)
     
 
     def __str__(self) -> str:
@@ -22,5 +24,6 @@ class CartItem(models.Model):
         for item in items:
             total += item.sub_total()
         return total
+    
     
     

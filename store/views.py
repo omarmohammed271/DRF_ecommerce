@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 from cart.models import CartItem
 from cart.serializers import CartItemSerializer
 from .models import *
@@ -18,9 +19,10 @@ class CategoryVIew(viewsets.ModelViewSet):
 
 class ProductView(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    pagination_class = PageNumberPagination
     filter_backends = [SearchFilter]
     search_fields  = ['name','description','category__name','size__name','color__name']
 
@@ -56,9 +58,11 @@ class ProductView(viewsets.ModelViewSet):
     def add_to_cart(self,request,slug=None):
         product = Product.objects.get(slug=slug)
         quantity = int(request.data['quantity'])
+        color = request.data['color']
+        size = request.data['size']
         user = request.user
         try:
-            cart_item = CartItem.objects.get(user=user,product=product)
+            cart_item = CartItem.objects.get(user=user,product=product,color=color,size=size)
             cart_item.quantity += quantity
             cart_item.save()
             serializer = CartItemSerializer(cart_item)
@@ -68,7 +72,7 @@ class ProductView(viewsets.ModelViewSet):
             }
             return Response(response,status=status.HTTP_200_OK)
         except:
-            cart_item = CartItem.objects.create(user=user,product=product,quantity=quantity)    
+            cart_item = CartItem.objects.create(user=user,product=product,quantity=quantity,color=color,size=size)    
             serializer = CartItemSerializer(cart_item)
             response = {
                 'message':'Product Added to Cart ',
