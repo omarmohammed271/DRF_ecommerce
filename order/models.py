@@ -43,7 +43,7 @@ class OrderProduct(models.Model):
     @property
     def total(self):
         total = 0
-        items = CartItem.objects.filter(user=self.user)
+        items = OrderProduct.objects.filter(user=self.user)
         for item in items:
             total += item.sub_total
         return total
@@ -52,4 +52,14 @@ class OrderProduct(models.Model):
         return f'{self.order.full_name} {self.product}'
 
 
+class OrderComplete(models.Model):
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    products = models.TextField()
+    total_price = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self) -> str:
+        return f'{self.order.full_name}'

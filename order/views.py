@@ -6,9 +6,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from store.models import Product
-from .models import Order,OrderProduct
+from .models import Order,OrderProduct,OrderComplete
 from cart.models import CartItem
-from .serializers import OrderProductSerializer,OrderSerializer
+from .serializers import OrderProductSerializer,OrderSerializer,OrderCompleteSerializer
 # Create your views here.
 
 @api_view(['GET','POST'])
@@ -102,6 +102,60 @@ def place_order(request):
             }    
         return Response(data,status=status.HTTP_200_OK)   
 
+@api_view(['GET','POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def order_complete(request):
+    user=request.user
+    if request.method=='GET':
+        orders=OrderComplete.objects.filter(user=user)
+        serializer = OrderCompleteSerializer(orders,many=True)
+        data = {
+                'message' : 'List All  orders completed',
+                'result' : serializer.data,
+            }    
+        return Response(data,status=status.HTTP_200_OK)
+    elif request.method == 'POST':
+        products = []
+        order = Order.objects.get(user=user)
+        order_products = OrderProduct.objects.filter(user=user)
+        
+        for product in order_products:
+            productname = product.product.name
+            quantity = product.quantity
+            price = product.product_price
+            subtotal = product.sub_total
+            products.append({
+                'product': productname,
+                'quantity': quantity,
+                'price': price,
+                'sub total': subtotal
+            })
+        
+        order_product = OrderProduct.objects.get(user=user, product__name=products[0]['product'])
+        
+        orders = OrderComplete.objects.create(
+            user=user,
+            order=order,
+            products=products,
+            total_price=order_product.total
+        )
+        
+        serializer = OrderCompleteSerializer(orders)
+        
+        data = {
+            'message': 'Order completed successfully',
+            'result': serializer.data
+        }
+        
+        return Response(data, status=status.HTTP_200_OK)  
+
+
+
+
+
+
+    
 
 
 
