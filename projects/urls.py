@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
+    path('accounts/',include('accounts.urls',namespace='accounts')),
     path('admin/', admin.site.urls),
     path('api/store/',include('store.urls',namespace='store')),
     path('api/cart/',include('cart.urls',namespace='cart')),

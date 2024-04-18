@@ -33,6 +33,11 @@ store
 - cart Models , serializers and viewsets
 -(from product detail)add to cart ---> api/store/product/add_to_cart [Done]
 -will add total price in cart [Done]
+-Pagination [DONE]
+-Order Model and OrderProduct
+-Serialize of two models of order
+-Added viewsets
+-Added Order Completed
 
 
 
