@@ -26,3 +26,22 @@ def contact(request):
         )
 
     return Response({'message':'message sended',},status=status.HTTP_200_OK)
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def mail_us(request):
+    if request.method == "POST":
+        subject = request.data.get('subject')
+        email = 'moramohammed96@gmail.com'
+        message = request.data.get('message')
+        sender = request.data.get('email')
+        reciever = email
+        send_mail(
+            subject,
+            message,
+            sender,
+            [reciever],
+            fail_silently=False,
+        )
+
+    return Response({'message':'message sended',},status=status.HTTP_200_OK)

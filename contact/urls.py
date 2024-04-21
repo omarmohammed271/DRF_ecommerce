@@ -6,5 +6,6 @@ app_name = 'contact'
 urlpatterns = [
     
     path('',views.contact,name='contact'),
+    path('mail/',views.mail_us,name='mail_us'),
     
 ]
