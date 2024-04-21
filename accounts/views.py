@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 from .models import Account
-from .serializers import LoginSerializer
+from .serializers import UserSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 # Create your views here.
@@ -33,6 +33,20 @@ def logout_view(request):
         logout(request)
         return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+     if request.method == "POST":
+          serializer = UserSerializer(data=request.data)
+          if serializer.is_valid():
+               serializer.save()
+               data={
+                    'message' : 'registeration Successfully',
+                    'result' : serializer.data
+               }
+               return Response(data,status=status.HTTP_201_CREATED)
+          return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+     
 
 # class RegisterView(APIView):
 #     def post(self, request):
