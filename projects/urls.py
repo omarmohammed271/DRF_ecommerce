@@ -11,6 +11,7 @@ urlpatterns = [
     path('api/store/',include('store.urls',namespace='store')),
     path('api/cart/',include('cart.urls',namespace='cart')),
     path('api/order/',include('order.urls',namespace='order')),
+    path('api/contact/',include('contact.urls',namespace='contact')),
     path('tokenrequest/',obtain_auth_token)
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
