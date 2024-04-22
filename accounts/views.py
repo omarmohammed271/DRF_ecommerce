@@ -3,9 +3,10 @@ from django.shortcuts import render
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view,permission_classes,authentication_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny,IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 from .models import Account
@@ -74,4 +75,19 @@ def reset_password(request):
         else:
             return Response({'error': 'User with that email not found'}, status=status.HTTP_400_BAD_REQUEST)
                 
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def new_password(request):
+    if request.method=='POST':
+        password1 = request.data.get('password1')
+        password2 = request.data.get('password2')
+        if password1==password2:
+              user = Account.objects.filter(email=request.user.email).first()
+              user.set_password(password1)
+              user.save()
+              return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'password and confirm password are not same'}, status=status.HTTP_400_BAD_REQUEST)
+
 
