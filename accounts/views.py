@@ -40,16 +40,31 @@ def logout_view(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
-     if request.method == "POST":
-          serializer = UserSerializer(data=request.data)
-          if serializer.is_valid():
-               serializer.save()
-               data={
-                    'message' : 'registeration Successfully',
-                    'result' : serializer.data
-               }
-               return Response(data,status=status.HTTP_201_CREATED)
-          return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    if request.method == "POST":
+        email = request.data.get('email')
+        username = email.split('@')[0]
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        user = Account.objects.filter(email=email).first()
+        if user:
+            return Response({'error': 'User with that email already registered'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        else:
+            new_password =Account.objects.make_random_password()
+            user = Account.objects.create_user(
+                email=email,first_name=first_name,last_name=last_name,username=username)
+            user.set_password(new_password)
+            user.save()
+            # Send email with new password
+            send_mail(
+                'Password Reset',
+                f'Your new password is: {new_password} \n for reset password go to http://127.0.0.1:8000/accounts/new_password/',
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+            return Response({'message': 'Signup successful. Check your email for the new password.'}, status=status.HTTP_201_CREATED)
+        
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def reset_password(request):
@@ -58,8 +73,6 @@ def reset_password(request):
         user = Account.objects.filter(email=email).first()
         if user:
              #Generate random password and send it in his email
-            
-            # new_password =User.objects.make_random_password()
             new_password =Account.objects.make_random_password()
             user.set_password(new_password)
             user.save()
