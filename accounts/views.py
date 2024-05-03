@@ -102,5 +102,19 @@ def new_password(request):
               return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'password and confirm password are not same'}, status=status.HTTP_400_BAD_REQUEST)
-
-
+@api_view(['GET','PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def edit_profile(request):
+    username = request.user.username
+    if request.method == 'GET':
+        account = Account.objects.get(username=username)
+        serializer = UserSerializer(instance=account)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    elif request.method == "PUT":
+        account = Account.objects.get(username=username)
+        serializer = UserSerializer(instance=account,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_202_ACCEPTED)
+        
